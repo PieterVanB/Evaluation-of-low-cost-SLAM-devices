@@ -1,0 +1,26 @@
+<?xml version="1.0"?>
+<launch>
+  <param name="use_sim_time" value="false" />
+  <arg name="use_cartographer" default="false" doc="Use Google Cartographer for SLAM" />
+  <arg name="use_gmapping" default="false" doc="Use GMapping for SLAM" />
+
+  <arg name="no_rviz" default="false" doc="Donot start Rviz"/>
+  <arg name="rate" default="1.0" doc="ROS bag replay rate"/>
+  <arg name="bag_filename"/>
+
+  <group if="$(arg use_cartographer)">
+    <include file="$(find thesis)/launch/config_2d.launch" />
+  </group>
+
+  <group if="$(arg use_gmapping)">
+    <include file="$(find thesis)/launch/config_gmapping.launch">
+      <arg name="angularUpdate" value="0.05" />
+    </include>
+  </group>
+
+<node name="rviz" pkg="rviz" type="rviz"  />
+
+
+  <arg name="skip_time" default="0" doc="Skip this many seconds before playing the bag file"/>
+
+</launch>

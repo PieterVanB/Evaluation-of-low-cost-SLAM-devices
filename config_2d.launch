@@ -1,0 +1,35 @@
+<!-- -*- mode: XML -*- -->
+<!-- run velodyne_pointcloud/CloudNodelet in a nodelet manager for a VLP-16 -->
+
+<launch>
+
+  <param name="use_sim_time" value="false"/>
+  
+  <param name="robot_description" command="$(find xacro)/xacro '$(find thesis)/urdf/kobuki_vlp.urdf.xacro'"/> <!-- commen tout for tango-->
+  <!--<node name="robot_state_publisher" pkg="robot_state_publisher" 
+	type="robot_state_publisher" /> --><!-- comment out for tango-->
+
+  <!-- <include file="$(find sensor_fusion)/launch/lidar_points.launch"/> -->
+
+   <!-- <node pkg="pose_publisher" type="pose_publisher" name="posePublisher">
+    <param name="base_frame" value="base_footprint"/>
+   </node> -->
+   
+   <node name="cartographer_node" pkg="cartographer_ros"
+      type="cartographer_node" args="
+          -configuration_directory /home/pieter/catkin_ws/src/cartographer_ros/cartographer_ros/configuration_files
+          -configuration_basename config_2d.lua" 
+      output="screen">
+	<!-- config_2d.lua -->
+    <!--<remap from="points2" to="velodyne_points"/>-->
+    <remap from="imu" to="android/imu" /> 			<!-- tango: from imu to android/imu-->
+    <remap from="scan" to="tango/laser_scan"/>
+    <!--<remap from="points2_1" to="horizontal_laser_3d" />
+    <remap from="points2_2" to="vertical_laser_3d" />-->
+  </node>
+
+   <node name="cartographer_occupancy_grid_node" pkg="cartographer_ros"
+	 type="cartographer_occupancy_grid_node" args="-resolution 0.05" />
+
+
+</launch>

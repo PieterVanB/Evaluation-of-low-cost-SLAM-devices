@@ -1,0 +1,67 @@
+<?xml version="1.0"?>
+<!--
+    - Base      : kobuki
+    - Stacks    : hexagons
+    - 3d Sensor : kinect
+-->    
+<robot name="turtlebot" xmlns:xacro="http://ros.org/wiki/xacro">
+  <material name="orange">
+    <color rgba="1.0 0.5 0.2 1" />
+  </material>
+  <material name="gray">
+    <color rgba="0.2 0.2 0.2 1" />
+  </material>
+
+  <xacro:include filename="$(find turtlebot_description)/urdf/turtlebot_common_library.urdf.xacro" />
+  <xacro:include filename="$(find kobuki_description)/urdf/kobuki.urdf.xacro" />
+  <!--<xacro:include filename="$(find sensor_fusion)/urdf/platform_vlp.urdf.xacro"/>-->
+  
+  <kobuki/>
+  <!--<stack_hexagons                 parent="base_footprint"/>-->
+
+  <xacro:property name="vlp_length" value="0.07"/>
+  <xacro:property name="vlp_radius" value="0.05"/>
+  <xacro:property name="plate_thickness" value="0.006"/>
+  <xacro:property name="pole_middle_length" value="0.08"/>
+  <xacro:property name="pole_base_length" value="0.04"/>
+  <xacro:property name="imu_x" value="0.058"/>
+  <xacro:property name="imu_y" value="0.058"/>
+  <xacro:property name="imu_z" value="0.033"/>
+  
+  <!--XSens IMU link-->
+  <link name="imu">
+    <visual>
+      <origin xyz="-0.05 -0.018 0.202" />
+      <geometry>
+        <box size="${imu_x} ${imu_y} ${imu_z}" />
+      </geometry>
+      <material name="orange" />
+    </visual>
+  </link>
+  
+  <joint name="imu_link_joint" type="fixed">
+    <parent link="base_footprint"/>
+    <child link="imu" />
+    <origin xyz="-${imu_x/2.0} -0.1314 ${pole_base_length+(pole_middle_length)+(plate_thickness*2.0)+(imu_z/2.0)}"/>
+  </joint>
+
+  <!--Lidar VLP16 Link-->
+  
+  
+  <link name="velodyne">
+    <visual>
+      <origin xyz="0.0 0.0 0.2685" />
+      <geometry>
+        <cylinder length="${vlp_length}" radius="${vlp_radius}" />
+      </geometry>
+      <material name="gray" />
+    </visual>
+  </link>
+  
+  <joint name="velodyne_joint" type="fixed">
+    <parent link="base_footprint"/>
+    <child link="velodyne" />
+    <origin xyz="0. 0. ${pole_base_length+(pole_middle_length*2.0)+(plate_thickness*3.0)+(vlp_length/2.0)}" rpy="0. 0. 0."/>
+  </joint>
+  
+</robot>

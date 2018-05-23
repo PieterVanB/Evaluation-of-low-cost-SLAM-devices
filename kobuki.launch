@@ -1,0 +1,11 @@
+<?xml version="1.0"?>
+<launch>
+
+  
+  <!--Launch the Turtle Bot-->
+  <include file="$(find turtlebot_bringup)/launch/minimal.launch" />
+  <include file="$(find turtlebot_teleop)/launch/keyboard_teleop.launch" />
+  
+
+  
+</launch>

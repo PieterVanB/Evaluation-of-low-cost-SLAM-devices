@@ -1,0 +1,38 @@
+<?xml version="1.0"?>
+<launch>
+  <param name="use_sim_time" value="true" />
+  <arg name="use_cartographer" default="false" doc="Use Google Cartographer for SLAM" />
+  <arg name="use_gmapping" default="false" doc="Use GMapping for SLAM" />
+
+  <arg name="no_rviz" default="false" doc="Donot start Rviz"/>
+  <arg name="rate" default="1.0" doc="ROS bag replay rate"/>
+  <arg name="bag_filename"/>
+
+  <group if="$(arg use_cartographer)">
+    <include file="$(find sensor_fusion)/launch/config_2d.launch" />
+  </group>
+
+  <group if="$(arg use_gmapping)">
+    <include file="$(find sensor_fusion)/launch/config_gmapping.launch">
+      <!-- <arg name="linearUpdate" value="0.01"/> -->
+      <arg name="angularUpdate" value="0.05" />
+      <!-- <arg name="particles" value="50"/> -->
+      <!-- <arg name="map_update_interval" value="0.05"/> -->
+      <!-- <arg name="maxUrange" value="50"/> -->
+    </include>
+  </group>
+
+
+
+<node name="rviz" pkg="rviz" type="rviz" args="-d $(find turtlebot3_slam)/rviz/turtlebot3_slam.rviz" />
+
+
+  <arg name="skip_time" default="0" doc="Skip this many seconds before playing the bag file"/>
+
+<!-- 
+  <node name="playbag" pkg="rosbag" type="play"
+	args="--start=$(arg skip_time) --clock --rate $(arg rate) $(arg bag_filename)"> -->
+    <!-- <remap to="tf_dev_null" from="tf"/> 
+  </node>
+-->
+</launch>
